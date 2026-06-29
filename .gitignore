@@ -1,0 +1,108 @@
+# ==========================
+# Python
+# ==========================
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+
+# Virtual Environment
+venv/
+.venv/
+env/
+ENV/
+
+# Environment Variables
+.env
+.env.*
+!.env.example
+
+# Python Packaging
+build/
+dist/
+*.egg-info/
+
+# ==========================
+# IDE
+# ==========================
+
+.vscode/
+.idea/
+
+# ==========================
+# OS Files
+# ==========================
+
+.DS_Store
+Thumbs.db
+
+# ==========================
+# Logs
+# ==========================
+
+*.log
+
+# ==========================
+# Testing
+# ==========================
+
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ==========================
+# Jupyter
+# ==========================
+
+.ipynb_checkpoints/
+
+# ==========================
+# FAISS / Runtime Data
+# ==========================
+
+*.faiss
+*.index
+cache/
+temp/
+tmp/
+
+# ==========================
+# Model Cache
+# ==========================
+
+models/
+downloads/
+
+# HuggingFace Cache
+.huggingface/
+hf_cache/
+
+# ==========================
+# NLTK
+# ==========================
+
+nltk_data/
+
+# ==========================
+# Local Database
+# ==========================
+
+*.db
+*.sqlite3
+
+# ==========================
+# Node (if frontend exists)
+# ==========================
+
+node_modules/
+.next/
+dist/
+
+# ==========================
+# Misc
+# ==========================
+
+*.bak
+*.tmp
