@@ -1,6 +1,7 @@
 from app.search.ddg import ddg_client
 from app.search.models import SearchResult
 from app.search.schemas import SearchPlan
+from app.search.ranking.service import ranking_service
 
 
 class SearchService:
@@ -30,6 +31,8 @@ class SearchService:
                 urls.add(result.url)
 
                 results.append(result)
+
+        results = ranking_service.rank(results)
 
         return results
 

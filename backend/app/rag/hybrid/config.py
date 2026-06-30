@@ -1,0 +1,5 @@
+BM25_TOP_K = 20
+
+FAISS_TOP_K = 20
+
+RRF_K = 60

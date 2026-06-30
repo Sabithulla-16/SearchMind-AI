@@ -6,18 +6,18 @@ from app.rag.chunking.splitter import splitter
 
 from app.rag.chunking.tokenizer import tokenizer
 
-from app.retriever.models import RetrievedDocument
+from app.sources.models import SourceDocument
 
 
 class ChunkingService:
 
     def chunk_document(
         self,
-        document: RetrievedDocument,
+        document: SourceDocument,
     ):
 
         texts = splitter.split(
-            document.content
+            document.text
         )
 
         total = len(texts)
@@ -54,7 +54,7 @@ class ChunkingService:
 
     def chunk_documents(
         self,
-        documents: list[RetrievedDocument],
+        documents: list[SourceDocument],
     ):
 
         all_chunks = []

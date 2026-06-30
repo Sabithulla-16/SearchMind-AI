@@ -6,20 +6,9 @@ class CitationBuilder:
     def build(
         self,
         documents: list[ContextDocument],
-    ):
+    ) -> list[ContextDocument]:
 
-        citations = []
-
-        for doc in documents:
-
-            citations.append(
-                {
-                    "title": doc.title,
-                    "url": doc.url,
-                }
-            )
-
-        return citations
+        return documents
 
 
 citation_builder = CitationBuilder()

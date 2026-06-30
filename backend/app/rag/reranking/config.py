@@ -1,0 +1,5 @@
+MODEL_NAME = "BAAI/bge-reranker-base"
+
+DEFAULT_TOP_K = 5
+
+INITIAL_RETRIEVAL_K = 20

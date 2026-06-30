@@ -3,6 +3,7 @@ import numpy as np
 
 from app.rag.embeddings.models import EmbeddedChunk
 
+from app.rag.reranking.config import INITIAL_RETRIEVAL_K
 
 class FAISSStore:
 
@@ -30,10 +31,18 @@ class FAISSStore:
 
         self.chunks.extend(chunks)
 
+    def clear(self):
+
+        self.index = faiss.IndexFlatIP(
+            self.dimension
+        )
+
+        self.chunks.clear()
+
     def search(
         self,
         query_embedding,
-        top_k=5,
+        top_k=INITIAL_RETRIEVAL_K,
     ):
 
         query = np.array(

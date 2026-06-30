@@ -1,19 +1,14 @@
-from app.rag.generation.service import generation_service
 from app.search.planner import planner
 
 from app.search.service import search_service
 
-from app.retriever.service import retriever_service
+from app.sources.service import source_service
 
-from app.rag.chunking.service import chunking_service
+from app.sources.models import SourceRequest
 
-from app.rag.embeddings.service import embedding_service
+from app.pipeline.rag_pipeline import rag_pipeline
 
-from app.rag.indexing.service import indexing_service
-
-from app.rag.generation.service import generation_service
-
-from app.pipeline.models import PipelineResult
+from app.observability.service import observability_service
 
 
 class SearchPipeline:
@@ -23,65 +18,78 @@ class SearchPipeline:
         query: str,
     ):
 
-        print("\n========== PIPELINE ==========\n")
+        observability_service.reset()
 
-        # Step 1
-        print("Planning search...")
-        plan = await planner.plan(query)
+        # -----------------------------
+        # Planner
+        # -----------------------------
 
-        # Step 2
-        print("Searching DDGS...")
-        search_results = await search_service.search(plan)
-
-        urls = [
-            result.url
-            for result in search_results[:5]
-        ]
-
-        # Step 3
-        print(f"Retrieving {len(urls)} pages...")
-        documents = await retriever_service.retrieve_many(
-            urls
+        observability_service.start(
+            "Planner"
         )
 
-        # Step 4
-        print("Chunking...")
-
-        chunks = chunking_service.chunk_documents(
-            documents
-        )
-
-        # Step 5
-        print("Embedding...")
-
-        embedded = embedding_service.embed_chunks(
-            chunks
-        )
-
-        # Step 6
-        print("Indexing...")
-
-        indexing_service.index(
-            embedded
-        )
-
-        # Step 7
-        print("Semantic Search...")
-
-        semantic = indexing_service.search(
+        plan = await planner.plan(
             query
         )
 
-        print("Generating answer...")
-
-        generation = await generation_service.generate(
-            query=query,
-            search_hits=semantic,
+        observability_service.stop(
+            "Planner"
         )
 
-        print("\n========== DONE ==========\n")
+        # -----------------------------
+        # Search
+        # -----------------------------
 
-        return generation
+        observability_service.start(
+            "Search"
+        )
+
+        search_results = await search_service.search(
+            plan
+        )
+
+        observability_service.stop(
+            "Search"
+        )
+
+        observability_service.counter(
+            "Search Results",
+            len(search_results),
+        )
+
+        request = SourceRequest(
+
+            query=query,
+
+            web_urls=[
+                result.url
+                for result in search_results
+            ],
+
+            target_documents=5,
+
+        )
+
+        source_result = await source_service.retrieve(
+            request
+        )
+
+        documents = source_result.documents
+
+        result = await rag_pipeline.run(
+            query=query,
+            documents=documents,
+        )
+
+        result["plan"] = plan
+
+        result["search_results"] = search_results
+
+        result["source_result"] = source_result
+
+        observability_service.summary()
+
+        return result
 
 
 search_pipeline = SearchPipeline()

@@ -1,4 +1,3 @@
-from typing import List
 from pydantic import BaseModel
 
 
@@ -8,5 +7,8 @@ class RetrievedDocument(BaseModel):
     content: str
 
 
-class RetrievalResponse(BaseModel):
-    documents: List[RetrievedDocument]
+class RetrievalStatistics(BaseModel):
+    attempted: int = 0
+    successful: int = 0
+    failed: int = 0
+    skipped: int = 0

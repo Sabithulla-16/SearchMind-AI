@@ -6,6 +6,7 @@ from app.rag.indexing.faiss_store import faiss_store
 
 from app.rag.embeddings.client import embedding_client
 
+from app.rag.reranking.config import INITIAL_RETRIEVAL_K
 
 class IndexingService:
 
@@ -16,10 +17,14 @@ class IndexingService:
 
         faiss_store.add(chunks)
 
+    def clear(self):
+
+        faiss_store.clear()
+
     def search(
         self,
         query: str,
-        top_k: int = 5,
+        top_k: int = INITIAL_RETRIEVAL_K,
     ):
 
         embedding = embedding_client.embed(
